@@ -7,20 +7,11 @@ import {
     Image
   } from "semantic-ui-react";
 
-  const emptyBook={title:"", img_url:"", description:""}
-
 export class BookDetail extends Component {
     render() {
         const {books, match}=this.props
         const {id}=match.params
-        let book
-        if (books.length){
-            book=books.find(book=> book.id==id)
-        }
-        else {
-            book=emptyBook
-        }
-        console.log(books)
+        let book=books.find(book=> book.id==id)
         return (
             <div>
                <Container text>
@@ -49,10 +40,6 @@ export class BookDetail extends Component {
             </div>
         )
     }
-}
-
-BookDetail.defaultProps={
-    books: []
 }
 
 export default BookDetail

@@ -41,7 +41,7 @@ export class App extends Component {
           {this.renderBooks()}
         </Menu>)
         }/>
-        <Route path= {`/books/:id`} render={ routerProps=> (<BookDetail {...routerProps} books={this.state.books}/>)
+        <Route path= {`/books/:id`} render={ routerProps=> (this.state.books.length?<BookDetail {...routerProps} books={this.state.books}/>:null)
         }/>
     </main>
       </Router>
