@@ -1,51 +1,53 @@
-import React from "react";
+import React, { Component } from 'react'
 import {
-  Container,
-  Header,
-  Menu,
-  Button,
-  List,
-  Image
+  Menu
 } from "semantic-ui-react";
+import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
+import BookDetail from './BookDetail'
 
-function App() {
-  return (
-    <div>
+
+export class App extends Component {
+  state={
+    books: [],
+    clicked:""
+  }
+  componentDidMount() {
+    fetch('http://localhost:3000/books')
+    .then(res=>res.json())
+    .then(res=> this.setState({books:res}))
+  }
+  renderBooks=()=>{
+    return this.state.books.map(book=> <Menu.Item as={"a"} onClick={e => this.handleClick(book)}>
+      <Link to={`/books/${book.id}`}>{book.title}</Link>
+      </Menu.Item>)
+  }
+
+  handleClick=(book)=>{
+    this.setState({clicked: book})
+  }
+
+  render() {
+    return (
+      <div>
+      <Router>
       <Menu inverted>
-        <Menu.Item header>Bookliker</Menu.Item>
+        <Menu.Item header><Link to="/">Bookliker</Link></Menu.Item>
+        <Menu.Item header>
+          <Link to="/books">All Books</Link>
+        </Menu.Item>
       </Menu>
       <main>
-        <Menu vertical inverted>
-          <Menu.Item as={"a"} onClick={e => console.log("book clicked!")}>
-            Book title
-          </Menu.Item>
-        </Menu>
-        <Container text>
-          <Header>Book title</Header>
-          <Image
-            src="https://react.semantic-ui.com/images/wireframe/image.png"
-            size="small"
-          />
-          <p>Book description</p>
-          <Button
-            color="red"
-            content="Like"
-            icon="heart"
-            label={{
-              basic: true,
-              color: "red",
-              pointing: "left",
-              content: "2,048"
-            }}
-          />
-          <Header>Liked by</Header>
-          <List>
-            <List.Item icon="user" content="User name" />
-          </List>
-        </Container>
-      </main>
-    </div>
-  );
+        <Route path= "/books" render={ ()=> (<Menu vertical inverted>
+          {this.renderBooks()}
+        </Menu>)
+        }/>
+        <Route path= {`/books/:id`} render={ routerProps=> (<BookDetail {...routerProps} books={this.state.books}/>)
+        }/>
+    </main>
+      </Router>
+      </div>
+    )
+  }
 }
 
-export default App;
+export default App
